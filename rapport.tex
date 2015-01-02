@@ -1,0 +1,62 @@
+\documentclass [a4paper,12pt] {article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[top=3cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+%\usepackage{layout}
+%\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage{verbatim}
+%\usepackage{titlesec}
+\usepackage{templateINSA}
+\usepackage{ulem}
+\usepackage{setspace}
+\setlength{\parindent}{1,5cm}
+\frenchbsetup%
+{%
+StandardItemLabels=true,%
+ItemLabels=\ding{43},%
+}%
+
+\title{Traitement d'Image}
+\author{Lucas Erard \\ Eva Kolici \\ Zhao Lun Wang}
+
+\renewcommand\soustitre{Projet :\\ Segmentation 3D}
+
+\renewcommand\infoBig{ASI4 2014-2015}
+\renewcommand\infoSmall{Enseignant : Ben}
+
+\begin{document}
+
+\titleINSA{15}{images/pageDeGarde.jpg}{0}{0}{255}{}{}{}
+
+\tableofcontents
+\newpage
+\section{Introduction}
+\input{intro.tex}
+
+\section{Prérequis}
+\input{prerequis.tex}
+
+\section{Estimation des parametres du modèle}
+\input{estimation.tex}
+
+\section{Itération}
+\input{iteration.tex}
+
+\section{Resultats expérimentaux}
+\input{experimental.tex}
+
+\section{Conclusion}
+\input{conclusion.tex}
+
+
+
+
+
+
+
+
+% --------------------------------------------------------------
+
+\end{document}

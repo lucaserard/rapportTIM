@@ -1,0 +1,174 @@
+\documentclass [a4paper,12pt] {article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[top=3cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+%\usepackage{layout}
+%\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{graphicx}
+\usepackage{verbatim}
+%\usepackage{titlesec}
+\usepackage{templateINSA}
+\usepackage{ulem}
+\usepackage{setspace}
+\setlength{\parindent}{1,5cm}
+\frenchbsetup%
+{%
+StandardItemLabels=true,%
+ItemLabels=\ding{43},%
+}%
+
+\title{BASE DE DONNÉES 2}
+\author{Lucas Erard \\ Marie Lavigne}
+
+\renewcommand\soustitre{Projet :\\ Réalisation d'une application de manipulation de base de données}
+
+\renewcommand\infoBig{ASI3 2013-2014}
+\renewcommand\infoSmall{Enseignant : Géraldine Del Mondo}
+
+\begin{document}
+
+\titleINSA{15}{images/pageDeGarde.jpg}{0}{0}{255}{}{}{}
+
+\tableofcontents
+\newpage
+\section{Introduction}
+
+\vspace*{1.2cm}
+
+
+\begin{spacing}{1.2}
+
+Dans le cadre du projet de base de données de cette année, chaque groupe a eu pour but le développement d'une base de 
+données accompagnée de ses diverses fonctionnalités ainsi que d'une application ayant pour but de faciliter 
+l'utilisation de cette base à des utilisateurs extérieurs. Il a entre autre pour optique l'application de toutes les connaissances vues en cours de BD1 et de BD2 durant 
+les deux derniers semestres.
+\\
+\vspace*{0.5cm}
+\\
+\indent Lors de la réalisation de ce projet, chaque groupe a fait des choix légèrement différents pour cependant tous obtenir 
+à la fin une base cohérente gérant des personnes, des salles ainsi qu'entre autre des réservations ou encore des 
+intrusions.
+\\
+\vspace*{0.5cm}
+\\
+\indent Ainsi, nous allons au cours de ce dossier vous exposer les choix que nous avons fait avec tout le contenu actuel de 
+notre projet, allant du passage du modèle E-A de très haut niveau au schéma relationnel, au choix des contraintes 
+d'intégrité, en passant par la définition des index et des droits.
+
+\end{spacing}
+
+
+\newpage
+\section{Présentation  du travail réalisé}
+\vspace*{0.5cm}
+\paragraph{} La réalisation de ce projet demandant un travail conséquent, il nous a paru important de bien le diviser en différentes étapes.
+\subsection{Passage du modèle Entité/Association au modèle \\ relationnel}
+\vspace*{0.5cm}
+Tout d'abord, il nous a fallu passer du modèle E-A de très haut niveau fourni dans le sujet au modèle relationnel qui 
+nous permettrait ensuite de définir les tables à créer ainsi que leurs attributs et clefs respectifs ou encore leurs 
+contraintes d'intégrité. Ainsi, nous en sommes arrivés au schéma suivant :\\
+\\
+PIECE (\underline{idP}, type, gps\_lat, gps\_lon)
+\\
+PERSONNE (\underline{idPers}, nom, grade)
+\\
+TACHE (\underline{date}, \underline{tache}, \underline{idPers}) \\
+\\
+PASSEPAR (\underline{idPers}, \underline{idP}, \underline{date})
+\\
+RESERVATION (\underline{idP}, \underline{idPers}, \underline{date})
+\\
+APPARTIENT (\underline{idP}, \underline{idPers})
+\\
+\\
+Les noms de tables et d'attributs ci-dessus sont les même que ceux utilisés dans le code.
+
+\subsection{Choix de clefs et d'attributs}
+\vspace*{0.5cm}
+Pour les tables Pièce et Personne, le choix des clefs fut simple puisqu'il était précisé dans le modèle E-A. En effet,
+une personne comme une pièce est entièrement définie par son id. \\
+\\
+\indent Nous avons décider d'ajouter comme clef à la table Tache l'attribut idPers (clef étrangère venant de la table Personne) 
+puisqu'à une même date, plusieurs personnes peuvent effectuer une tâche de même description. Ainsi, une tâche ne peut
+être entièrement définie que si l'on prend les 3 attributs comme clef. \\
+\\
+\indent Les associations PassePar et Appartient ont, lors du passage au modèle relationnel, héritées des clefs de Personne et 
+de Pièce qui se sont intégrées à la clef de ces tables. De même, l'association Planifie a hérité des clefs de Personne 
+et de Tache. Ces choix respectent la méthode de passage d'un modèle à l'autre vu en première partie de base de données.
+
+\newpage
+\subsection{Explications des parties complexes du projet}
+\vspace*{0.5cm}
+\subsubsection{Vues}
+\vspace*{0.5cm}
+L'une des parties les plus complexes de ce projet a été la création des vues et plus particulièrement de la vue 
+RAPPORT\_ACTIVITE. \\
+\\
+\indent Notre première décision fut de coder cette dernière sans utiliser de fonction permettant de vérifier la cohérence entre
+le grade, le type de pièce et l'activité. Cependant, la méthode de coder les conditions directement dans la vue 
+n'a pas abouti,car malgré de nombreuses tentatives, nous n'avons pas été en mesure de la faire fonctionner. \\
+\indent C'est pourquoi nous avons suivi les conseils précédemment donnés par un camarade et avons entrepris de créer 
+une fonction dédiée uniquement à déterminer la cohérence. Ce choix a lui aussi été long à mettre en oeuvre mais a pour 
+sa part porté ses fruits.
+\indent Il nous a paru important d'avoir le code afin de l'expliciter plus facilement, c'est pourquoi nous avons 
+directement placé dans celui-ci de nombreux commentaires visant à donner l'utilité exacte de chacune de ses parties.\\
+\\
+\indent La vue INTRUSION s'est avérée moins complexe et n'a donc pas nécessité de fonction. Nous avons néanmoins aussi commenté
+son code afin de le rendre plus clair.
+
+\subsubsection{Triggers}
+\vspace*{0.5cm}
+Afin d'imposer des conditions sur les tables Reservation et Tache, nous avons mis en place des Triggers renvoyant au développeur ou
+à l'utilisateur une exception dans le cas où il chercherait à faire un changement sur la base qui ne respecterait pas une de ces 
+conditions. \\
+
+Ainsi la table Reservation dispose de trois Triggers faisant appel à trois fonctions de même nom :
+\begin{itemize}
+ \item Le triggerPiecOccup : il vérifie pour chaque nouvelle réservation que la pièce demandée est bien libre à la date demandée, c'est-à-dire qu'il n'existe pas déjà une réservation ayant à la fois le même idP et la même date.
+ \item Le triggerGradeIncoherent :il vérifie pour chaque nouvelle réservation que le grade de la personne réservant correspond bien au type de salle qu'elle souhaite réserver.
+ \item Le triggerDoubleReserv : il vérifie pour chaque nouvelle réservation que la personne réservant n'a pas déjà réservé une salle à cette date (nous supposons ici que personne ne possède pas  le don d'ubiquité).
+\end{itemize}
+
+\vspace*{0.4cm}
+
+La table Tache possède quant à elle un seul Trigger faisant appel à une fonction de même nom :
+\begin{itemize}
+ \item Le triggerTachePourPE : il vérifie pour chaque nouvelle tâche que la personne l'effectuant n'est pas PE puisque ceux-ci ne sont pas concernés par les tâches présentes dans cette table.
+\end{itemize}
+
+\subsubsection{Suppression du retour de chariot}
+\vspace*{0.5cm}
+\paragraph{} Lorsque l'on utilise la fonction fgets pour lire une chaine de caractères, il est important de couper le dernier caractere de la chaine retournée.\\
+En effet, lorsque l'on appuie sur la touche entrée pour valider notre saisie dans l'entrée standard, la fonction fgets enregistre un retour de chariot comme dernier caractère, ce qui a pour effet de fausser les lectures suivantes.
+
+\section{Améliorations possibles}
+\vspace*{0.5cm}
+\input{AmeliorationsPossibles.tex}
+\newpage
+\section{Conclusions sur le projet}
+\input{Conclusion.tex}
+
+\newpage
+\section{Annexes}
+\vspace*{0.5cm}
+\subsection{Code source postgres : appli.pgc}
+\vspace*{0.5cm}
+\verbatiminput{../src/appli.pgc}
+
+\subsection{Code source sql : creation.sql}
+\vspace*{0.5cm}
+\verbatiminput{../src/creation.sql}
+\subsection{Code source sql : suppression.sql}
+\vspace*{0.5cm}
+\verbatiminput{../src/suppression.sql}
+
+
+
+
+
+
+
+% --------------------------------------------------------------
+
+\end{document}
